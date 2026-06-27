@@ -16,7 +16,9 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/", controller.HealthChecker)
+	r.POST("/testendpoint", controller.TestEndPoint)
 
-	r.Run() // application at localhost:8080/
+	r.Run()
+
 	time.Sleep(time.Second * 10)
 }

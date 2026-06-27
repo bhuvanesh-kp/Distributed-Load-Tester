@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"version_1/cmd/controller"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +18,4 @@ func main() {
 	r.POST("/testendpoint", controller.TestEndPoint)
 
 	r.Run()
-
-	time.Sleep(time.Second * 10)
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"version_1/internal/domain"
+	"version_1/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,7 @@ func NewController() appControllerInterface {
 type appStruct struct {
 	previousUrl         map[string]any
 	totalRequestHandled int16
+	srv                 service.NewServiceStruct
 }
 
 func (ctl *appStruct) HealthChecker(c *gin.Context) {
@@ -40,11 +42,15 @@ func (ctl *appStruct) TestEndPoint(c *gin.Context) {
 		return
 	}
 
-	// TODO: add worker logic to hit the provided endpoint
+	_, ok := ctl.previousUrl[req.Url]
+
+	if !ok {
+		res := ctl.srv.LoadWithSingleWorker(req.Url)
+		ctl.previousUrl[req.Url] = res
+	}
 
 	c.JSON(http.StatusAccepted, gin.H{
 		"status":      200,
-		"url":         req.Url,
 		"results":     ctl.previousUrl[req.Url],
 		"cacheStatus": 0,
 	})

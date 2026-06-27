@@ -3,21 +3,20 @@ package main
 import (
 	"fmt"
 	"time"
+	"version_1/cmd/controller"
 
 	"github.com/gin-gonic/gin"
 )
 
-func main(){
-	fmt.Println("Version1 of Distribured-Load-Tester(DLT) ...");
+func main() {
+	fmt.Println("Version1 of Distribured-Load-Tester(DLT) ...")
 
-	r := gin.Default();
+	controller := controller.NewController()
 
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "Application is alive",
-		});
-	})
+	r := gin.Default()
+
+	r.GET("/", controller.HealthChecker)
 
 	r.Run() // application at localhost:8080/
-	time.Sleep(time.Second * 10);
+	time.Sleep(time.Second * 10)
 }

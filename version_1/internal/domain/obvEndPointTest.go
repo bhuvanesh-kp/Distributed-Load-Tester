@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type WorkerStatus string
 
 const (
@@ -8,6 +10,7 @@ const (
 )
 
 type WorkerResult struct {
-	Status WorkerStatus
-	Url    string
+	Status   WorkerStatus
+	Url      string
+	Duration time.Duration
 }

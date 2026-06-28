@@ -17,13 +17,16 @@ func NewController() appControllerInterface {
 	return &appStruct{
 		previousUrl:         make(map[string]any, 5),
 		totalRequestHandled: 0,
+		CacheHits:           0,
+		srv:                 service.NewService(),
 	}
 }
 
 type appStruct struct {
 	previousUrl         map[string]any
 	totalRequestHandled int16
-	srv                 service.NewServiceStruct
+	srv                 service.AppServiceInterface
+	CacheHits           int16
 }
 
 func (ctl *appStruct) HealthChecker(c *gin.Context) {
@@ -47,11 +50,15 @@ func (ctl *appStruct) TestEndPoint(c *gin.Context) {
 	if !ok {
 		res := ctl.srv.LoadWithSingleWorker(req.Url)
 		ctl.previousUrl[req.Url] = res
+		ctl.totalRequestHandled++
+	} else {
+		ctl.CacheHits++
 	}
 
 	c.JSON(http.StatusAccepted, gin.H{
-		"status":      200,
-		"results":     ctl.previousUrl[req.Url],
-		"cacheStatus": 0,
+		"status":                    200,
+		"results":                   ctl.previousUrl[req.Url],
+		"CacheHits":                 ctl.CacheHits,
+		"TotalUniqueRequestHandled": ctl.totalRequestHandled,
 	})
 }

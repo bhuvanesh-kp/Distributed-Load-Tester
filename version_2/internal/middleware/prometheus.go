@@ -10,7 +10,7 @@ import (
 var (
 	RequestCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "Application_Request_Counter",
+			Name: "myapp_requests_total",
 			Help: "This metrics provides the total number of reqest handled by the application",
 		},
 		[]string{"path", "status"},

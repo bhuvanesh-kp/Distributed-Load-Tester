@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"time"
 	"version_1/internal/domain"
 	"version_1/internal/service"
 
@@ -36,6 +37,7 @@ func (ctl *appStruct) HealthChecker(c *gin.Context) {
 }
 
 func (ctl *appStruct) TestEndPoint(c *gin.Context) {
+
 	var req domain.Endpoint
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -44,6 +46,7 @@ func (ctl *appStruct) TestEndPoint(c *gin.Context) {
 		})
 		return
 	}
+	startTimer := time.Now()
 
 	_, ok := ctl.previousUrl[req.Url]
 
@@ -55,10 +58,13 @@ func (ctl *appStruct) TestEndPoint(c *gin.Context) {
 		ctl.CacheHits++
 	}
 
+	duration := time.Since(startTimer)
+
 	c.JSON(http.StatusAccepted, gin.H{
 		"status":                    200,
 		"results":                   ctl.previousUrl[req.Url],
 		"CacheHits":                 ctl.CacheHits,
 		"TotalUniqueRequestHandled": ctl.totalRequestHandled,
+		"TimeTakenByWorker":         time.Duration(duration.Microseconds()),
 	})
 }

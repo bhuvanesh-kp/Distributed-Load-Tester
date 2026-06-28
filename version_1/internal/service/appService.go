@@ -18,9 +18,7 @@ type NewServiceStruct struct{}
 
 func (srv *NewServiceStruct) LoadWithSingleWorker(url string) any {
 	startTime := time.Now()
-
 	_, err := http.Get(url)
-
 	duration := time.Since(startTime)
 
 	if err != nil {
